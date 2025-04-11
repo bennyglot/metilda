@@ -1,0 +1,35 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
+    "prebuild": "npm run copy-packages",
+    "copy-packages": "rimraf src/package && mkdir src\\package && copyfiles -u 2 ../packages/dist/**/* src/package",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "body-parser": "2.2.0",
+    "express": "5.1.0",
+    "ws": "8.18.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/json2csv": "^5.0.7",
+    "@types/node": "^22.14.0",
+    "@types/ws": "^8.18.1",
+    "copyfiles": "^2.4.1",
+    "csv-parser": "3.2.0",
+    "json2csv": "6.0.0-alpha.2",
+    "redis": "4.7.0",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
