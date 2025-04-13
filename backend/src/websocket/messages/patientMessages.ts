@@ -5,12 +5,12 @@ import { WSMessagesTopic, WSMessagesPatientActions } from '../../package/dist';
 const handlePatientMessages = async (ws: WebSocket, action: string, data: any) => {
   try {
     switch (action) {
-      case `${WSMessagesTopic.PATIENT}: ${WSMessagesPatientActions.GET_ALL}`:
+      case `${WSMessagesTopic.PATIENT}:${WSMessagesPatientActions.GET_ALL}`:
         const allPatients = await PatientsService.getAllPatients();
         ws.send(JSON.stringify({ action: `${WSMessagesTopic.PATIENT}: ${WSMessagesPatientActions.GET_ALL}`, data: allPatients }));
         break;
 
-      case `${WSMessagesTopic.PATIENT}: ${WSMessagesPatientActions.GET_BY_ID}`:
+      case `${WSMessagesTopic.PATIENT}:${WSMessagesPatientActions.GET_BY_ID}`:
         const patient = await PatientsService.getPatientById(data.patientId);
         if (patient) {
           ws.send(JSON.stringify({ action: `${WSMessagesTopic.PATIENT}: ${WSMessagesPatientActions.GET_BY_ID}`, data: patient }));

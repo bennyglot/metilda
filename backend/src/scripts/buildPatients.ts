@@ -1,10 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import csv from 'csv-parser';
-import { Admission, LabResult } from '../package/dist';
+import { IPatient, ILabResult } from '../package/dist';
 
-interface Patient extends Admission {
-  lab_results: LabResult[];
+interface Patient extends IPatient {
+  lab_results: ILabResult[];
 }
 
 const admissionsFile = path.join(__dirname, '../../data/admissions.csv');
@@ -24,8 +24,8 @@ async function parseCSV<T>(filePath: string): Promise<T[]> {
 
 async function buildPatients() {
   try {
-    const admissions: Admission[] = await parseCSV<Admission>(admissionsFile);
-    const labResults: LabResult[] = await parseCSV<LabResult>(labResultsFile);
+    const admissions: IPatient[] = await parseCSV<IPatient>(admissionsFile);
+    const labResults: ILabResult[] = await parseCSV<ILabResult>(labResultsFile);
 
     const patients: Patient[] = admissions.map((admission) => {
       const patientLabResults = labResults.filter(
