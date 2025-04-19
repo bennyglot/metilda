@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTable, TableProps } from "./useTable";
 
+
 export function Table<T extends Record<string, any>>({ data, onRowClick }: TableProps<T>) {
   const { headers, rows, handleRowClick } = useTable(data, onRowClick);
 
   if (!rows || rows.length === 0) return <div>No data</div>;
  
   return (
-    <table>
+    <table className="table-responsive">
       <thead>
         <tr>
           {headers.map((header) => (

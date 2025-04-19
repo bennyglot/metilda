@@ -1,0 +1,71 @@
+/* Responsive table container */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  /* Table base styles */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    font-size: 1rem;
+    transition: margin-left 0.3s;
+  }
+  
+  /* Table header */
+  th {
+    background: #f5f5f5;
+    padding: 12px 8px;
+    text-align: left;
+    border-bottom: 2px solid #e0e0e0;
+    font-weight: bold;
+  }
+  
+  /* Table rows */
+  td {
+    padding: 10px 8px;
+    border-bottom: 1px solid #e0e0e0;
+    word-break: break-word;
+  }
+  
+  /* Hover effect */
+  tbody tr:hover {
+    background: #e6f0fa;
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  
+  /* Responsive: stack columns on small screens */
+  @media (max-width: 700px) {
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+    thead tr {
+      display: none;
+    }
+    tr {
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    td {
+      padding-left: 50%;
+      position: relative;
+      min-height: 40px;
+    }
+    td:before {
+      position: absolute;
+      left: 8px;
+      top: 10px;
+      width: 45%;
+      white-space: nowrap;
+      font-weight: bold;
+      color: #888;
+      content: attr(data-label);
+    }
+  }
+  
+  /* Adjust table margin when sidebar is closed */
+  .sidebar-closed table {
+    margin-left: 60px; /* adjust as needed for your sidebar width */
+  }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css'; // Add styles for the sidebar
-import { useSidebar } from './useSidebar';
 
 interface ISidebarItem {
   label: string;
@@ -10,10 +9,11 @@ interface ISidebarItem {
 
 interface ISidebarProps {
   items: ISidebarItem[];
+  isMinimized?: boolean;
+  toggleSidebar?: () => void;
 }
 
-export const Sidebar: React.FC<ISidebarProps> = ({ items }) => {
-  const {isMinimized, toggleSidebar} = useSidebar();
+export const Sidebar: React.FC<ISidebarProps> = ({ items, isMinimized, toggleSidebar }) => {
 
   return (
     <div className={`sidebar ${isMinimized ? 'minimized' : ''}`}>
