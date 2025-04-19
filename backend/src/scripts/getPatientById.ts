@@ -1,14 +1,12 @@
-import RedisService from '../package/dist/services/redis/redisService';
-import PatientsService from '../services/patientsService';
-import { getSocketUrl } from './utils';
+import RedisService from '../redis/redisService';
+import {getPatientById as getPatientByIdFromService} from '../services/patientsService';
 
 async function getPatientById(patientId: string) {
   console.log(`Fetching patient with ID: ${patientId}`);
   try {
-    const redisService = RedisService.getInstance(getSocketUrl());
-    await redisService.connect();
+    const redisService = RedisService.getInstance();
 
-    const patient = await PatientsService.getPatientById(patientId);
+    const patient = await getPatientByIdFromService(patientId);
     if (patient) {
       console.log(`Patient data for ID ${patientId}:`, patient);
     } else {

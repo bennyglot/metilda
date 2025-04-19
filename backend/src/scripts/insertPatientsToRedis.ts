@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import RedisService from '../package/dist/services/redis/redisService';
-import { getSocketUrl } from './utils';
+import RedisService from '../redis/redisService';
 
 const combinedFile = path.join(__dirname, '../../data/combined.json');
 async function insertPatientsToRedis() {
@@ -10,15 +9,24 @@ async function insertPatientsToRedis() {
     const patientsData = JSON.parse(fs.readFileSync(combinedFile, 'utf-8'));
 
     // Get Redis client from the service
-    const redisService = RedisService.getInstance(getSocketUrl());
-    await redisService.connect();
-    const redisClient = redisService.getClient();
+    const redisClient = RedisService.getInstance();
 
-    // Store all patients under a single key "patients"
-    await redisClient.set('patients', JSON.stringify({ patients: patientsData }));
-    console.log('All patients have been inserted into Redis under the key "patients".');
+     // Iterate over each patient and store them individually
+     for (const patient of patientsData) {
+      const patientId = patient.id; // Assuming each patient object has an "id" field
+      if (!patientId) {
+        console.error('Patient data is missing an "id" field:', patient);
+        continue;
+      }
 
-    await redisService.disconnect();
+      // Store the patient data as a JSON string under the key "patient:<patient-id>"
+      await redisClient.set(`patient:${patientId}`, JSON.stringify(patient));
+      console.log(`Inserted patient with ID ${patientId} into Redis.`);
+    }
+
+    console.log('All patients have been inserted into Redis.');
+
+    await redisClient.disconnect();
   } catch (error) {
     console.error('Error inserting patients into Redis:', error);
   }

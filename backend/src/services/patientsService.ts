@@ -1,46 +1,52 @@
-import RedisService from "../package/dist/services/redis/redisService";
-import { getSocketUrl } from "../scripts/utils";
+import { getDb } from "../config/db";
+import { IPatient } from "../types";
 
-class PatientsService {
-  private redisService: RedisService;
+// Fetch all patients
+export const getAllPatients = async (): Promise<IPatient[]> => {
+  try {
+    console.log("[MongoDB] Fetching all patients from database...");
+    const db = await getDb();
+    const patients = await db.collection('patients').find({}).toArray();
+    
+    return patients as unknown as Promise<IPatient[]>;
 
-  constructor() {
-    this.redisService = RedisService.getInstance(getSocketUrl());
+  } catch (error) {
+    console.error("Error fetching all patients from MongoDB:", error);
+    throw error;
   }
+};
 
-  public async getAllPatients(): Promise<any[]> {
-    try {
-      const redisClient = this.redisService.getClient();
-      const patientsData = await redisClient.get('patients');
-      return patientsData ? JSON.parse(patientsData).patients : [];
-    } catch (error) {
-      console.error('Error fetching all patients from Redis:', error);
-      throw error;
-    }
+// Fetch a single patient by ID
+export const getPatientById = async (patientId: string): Promise<IPatient | null> => {
+  try {
+    console.log("[MongoDB] Fetching patientId...");
+    const db = await getDb();
+    const patient = await db.collection('patients').findOne({ patient_id: patientId });
+    return patient as unknown as IPatient;
+  } catch (error) {
+    console.error("Error fetching all patients from MongoDB:", error);
+    throw error;
   }
+};
 
-  public async getPatientById(patientId: string): Promise<any> {
-    try {
-      const patients = await this.getAllPatients();
-      return patients.find((patient: any) => patient.patient_id === patientId) || null;
-    } catch (error) {
-      console.error(`Error retrieving patient with ID ${patientId} from Redis:`, error);
-      throw error;
-    }
+// Fetch lab results by test ID for a specific patient
+export const getLabResultsByTestId = async (patientId: string, testId: string): Promise<any[]> => {
+  try {
+    console.log(`[MongoDB] Fetching lab results for patient ${patientId} and test ID ${testId}...`);
+    const db = await getDb();
+    
+    const results = await db.collection('patients')
+      .aggregate([
+        { $match: { patient_id: patientId } },
+        { $unwind: "$lab_results" },
+        { $match: { "lab_results.test_id": testId } },
+        { $replaceRoot: { newRoot: "$lab_results" } }
+      ])
+      .toArray();
+      
+    return results;
+  } catch (error) {
+    console.error(`Error retrieving lab results for patient ${patientId} and test ID ${testId}:`, error);
+    throw error;
   }
-
-  public async getLabResultsByTestId(patientId: string, testId: string): Promise<any[]> {
-    try {
-      const patient = await this.getPatientById(patientId);
-      if (patient && patient.lab_results) {
-        return patient.lab_results.filter((result: any) => result.test_id === testId);
-      }
-      return [];
-    } catch (error) {
-      console.error(`Error retrieving lab results for patient ${patientId} and test ID ${testId}:`, error);
-      throw error;
-    }
-  }
-}
-
-export default new PatientsService();
+};

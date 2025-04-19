@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import csv from 'csv-parser';
-import { IPatient, ILabResult } from '../package/dist';
+import { IPatient, ILabResult } from '../types';
 
 interface Patient extends IPatient {
   lab_results: ILabResult[];
@@ -24,6 +24,12 @@ async function parseCSV<T>(filePath: string): Promise<T[]> {
 
 async function buildPatients() {
   try {
+    // Clean the JSON file before updating
+    if (fs.existsSync(outputFile)) {
+      fs.writeFileSync(outputFile, '[]'); // Reset the file with an empty array
+      console.log(`Cleaned the file: ${outputFile}`);
+    }
+
     const admissions: IPatient[] = await parseCSV<IPatient>(admissionsFile);
     const labResults: ILabResult[] = await parseCSV<ILabResult>(labResultsFile);
 
@@ -32,11 +38,14 @@ async function buildPatients() {
         (labResult) => labResult.patient_id === admission.patient_id
       );
 
-      console.log(`patientLabResults for ${admission.patient_id}:`, patientLabResults);
-      return {
+      const fullPatient = {
         ...admission,
         lab_results: patientLabResults,
       };
+
+      console.log(`fullPatient: ${JSON.stringify(fullPatient)}`);
+
+      return fullPatient;
     });
 
     fs.writeFileSync(outputFile, JSON.stringify(patients, null, 2));
