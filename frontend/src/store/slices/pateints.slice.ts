@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IPatient } from "../../package/dist";
+import { IPatient, IPatientDetails } from "../../types";
 
 interface patientsState {
     patients: IPatient[];
-    selectedPatient: IPatient | null;
+    selectedPatient: IPatientDetails | null;
     loading: boolean;
     error: string | null;
 }
@@ -14,7 +14,7 @@ const patientsIntialStatus: patientsState = {
     error: null,
 };
 export const patientsSlice = createSlice({
-    name: "patients",
+    name: "patientsReducer",
     initialState: patientsIntialStatus,
     reducers: {
         setPatients: (state, action) => {

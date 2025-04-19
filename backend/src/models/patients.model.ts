@@ -4,7 +4,7 @@ import { LabResultSchema, ILabResultDocument } from './labResult.model';
 
 // Extend the IPatient interface with Mongoose's Document
 export interface IPatientDocument extends IPatient, Document {
-  lab_results: ILabResultDocument[]; // Add lab_results as an array of LabResult documents
+  lab_results: number; // Add lab_results as an array of LabResult documents
 }
 
 const PatientSchema: Schema = new Schema({

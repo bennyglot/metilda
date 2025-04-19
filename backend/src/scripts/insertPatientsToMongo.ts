@@ -17,7 +17,6 @@ async function insertPatientsToMongo() {
     // Read the combined.json file
     const patientsData: IPatient[] = JSON.parse(fs.readFileSync(combinedFile, 'utf-8'));
 
-    debugger;
     // Perform bulk insertion
     const bulkOps = patientsData.map((patient) => {
       console.log('Updating patient:', patient);

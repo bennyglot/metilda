@@ -1,0 +1,29 @@
+.patients-labresults-container {
+  display: flex;
+  height: 100vh;
+  transition: all 0.3s;
+}
+
+.patients-table {
+  flex: 1 1 50%;
+  min-width: 300px;
+  overflow: auto;
+  transition: all 0.3s;
+}
+
+.labresults-panel {
+  flex: 1 1 50%;
+  min-width: 300px;
+  overflow: auto;
+  border-left: 1px solid #eee;
+  transition: all 0.3s;
+}
+
+/* Example: If you have a sidebar state, adjust widths */
+.sidebar-closed .patients-labresults-container {
+  margin-left: 60px; /* or whatever your collapsed sidebar width is */
+}
+
+.sidebar-open .patients-labresults-container {
+  margin-left: 240px; /* or your expanded sidebar width */
+}

@@ -4,7 +4,7 @@ import csv from 'csv-parser';
 import { IPatient, ILabResult } from '../types';
 
 interface Patient extends IPatient {
-  lab_results: ILabResult[];
+  lab_results: number;
 }
 
 const admissionsFile = path.join(__dirname, '../../data/admissions.csv');
@@ -33,21 +33,7 @@ async function buildPatients() {
     const admissions: IPatient[] = await parseCSV<IPatient>(admissionsFile);
     const labResults: ILabResult[] = await parseCSV<ILabResult>(labResultsFile);
 
-    const patients: Patient[] = admissions.map((admission) => {
-      const patientLabResults = labResults.filter(
-        (labResult) => labResult.patient_id === admission.patient_id
-      );
-
-      const fullPatient = {
-        ...admission,
-        lab_results: patientLabResults,
-      };
-
-      console.log(`fullPatient: ${JSON.stringify(fullPatient)}`);
-
-      return fullPatient;
-    });
-
+    const patients: Patient[] = [];
     fs.writeFileSync(outputFile, JSON.stringify(patients, null, 2));
     console.log(`Combined data written to ${outputFile}`);
   } catch (error) {

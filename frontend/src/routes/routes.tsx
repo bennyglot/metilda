@@ -1,8 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import {AppLayout} from '../components/AppLayout';
-import {Patients} from '../pages/patients';
-import { LabResults } from '../pages/labResults';
-import {LabResult} from '../pages/labResult';
+import {Patients} from '../pages/patients/patients';
+import { LabResults } from '../pages/labResult/labResults';
 
 export const AppRoutes = () => {
   return (
@@ -11,7 +10,6 @@ export const AppRoutes = () => {
       <Route path="/" element={<AppLayout />}>
           <Route path="patients" element={<Patients />} >
             <Route path=":patientId" element={<LabResults />}>
-              <Route path=":testId" element={<LabResult />} />
           </Route>
          </Route>
       </Route>

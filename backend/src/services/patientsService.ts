@@ -1,15 +1,33 @@
 import { getDb } from "../config/db";
 import { IPatient } from "../types";
 
-// Fetch all patients
-export const getAllPatients = async (): Promise<IPatient[]> => {
+// Fetch all patients with pagination
+export const getAllPatients = async (page = 1, limit = 10): Promise<{ data: IPatient[]; total: number }> => {
   try {
     console.log("[MongoDB] Fetching all patients from database...");
     const db = await getDb();
-    const patients = await db.collection('patients').find({}).toArray();
-    
-    return patients as unknown as Promise<IPatient[]>;
 
+    const skip = (page - 1) * limit;
+    const [patients, total] = await Promise.all([
+      db.collection('patients').find({})
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
+      db.collection('patients').countDocuments()
+    ]);
+
+    // Map patients to match the updated IPatient interface where lab_results is a number
+    const mappedPatients = patients.map(patient => {
+      const labResultsCount = patient.lab_results && Array.isArray(patient.lab_results)
+        ? patient.lab_results.length
+        : 0;
+      return {
+        ...patient,
+        lab_results: labResultsCount
+      } as unknown as IPatient;
+    });
+
+    return { data: mappedPatients, total };
   } catch (error) {
     console.error("Error fetching all patients from MongoDB:", error);
     throw error;
