@@ -1,6 +1,5 @@
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './sidebar/Sidebar';
-import "./AppLayout.css";
 import { useSidebar } from './sidebar/useSidebar';
 
 const sidebarItems = [
