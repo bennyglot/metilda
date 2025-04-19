@@ -2,8 +2,6 @@ import express from 'express';
 import http from 'http';
 import patientsRoutes from './routes/patients';
 const cors = require('cors');
-
-
 const app = express();
 const PORT = 3000;
 
@@ -33,3 +31,5 @@ server.listen(PORT, () => {
 };
 
 startServer();
+
+export default app; // Export the app for testing purposes
